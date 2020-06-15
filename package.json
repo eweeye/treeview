@@ -23,5 +23,8 @@
   "homepage": "https://github.com/eweeye/treeview#readme",
   "devDependencies": {
     "grunt": "^1.1.0"
+  },
+  "dependencies": {
+    "grunt-contrib-concat": "^1.0.1"
   }
 }

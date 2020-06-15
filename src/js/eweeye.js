@@ -1,0 +1,3 @@
+if (!eweeye) {
+    eweeye = {};
+}
