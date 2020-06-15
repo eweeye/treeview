@@ -5,6 +5,9 @@ module.exports = function(grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        clean: {
+            dist: ['dist']
+        },
         concat: {
             options: {
                 separator: ';\n',
@@ -16,8 +19,10 @@ module.exports = function(grunt) {
         }
     });
 
- grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-concat');
 
- grunt.registerTask('default', ['concat:dist']);
+    grunt.registerTask('default', ['concat:dist']);
+    grunt.registerTask('scrub', ['clean:dist']);
 
 }
