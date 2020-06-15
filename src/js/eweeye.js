@@ -1,3 +1,3 @@
-if (!eweeye) {
+if (!window.eweeye) {
     eweeye = {};
 }
