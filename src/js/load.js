@@ -1,3 +1,0 @@
-eweeye.treeview = {
-
-};
