@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/eweeye/treeview/issues"
   },
-  "homepage": "https://github.com/eweeye/treeview#readme"
+  "homepage": "https://github.com/eweeye/treeview#readme",
+  "devDependencies": {
+    "grunt": "^1.1.0"
+  }
 }
