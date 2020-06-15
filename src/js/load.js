@@ -1,3 +1,3 @@
-eweeye["treeview"] = {
+eweeye.treeview = {
 
 };
