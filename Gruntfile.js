@@ -17,6 +17,21 @@ module.exports = function(grunt) {
                 dest: 'dist/js/eweeye-treeview.js'
             }
         },
+        cssmin: {
+          options: {
+            mergeIntoShorthands: false,
+            roundingPrecision: -1
+          },
+          target: {
+            files: [{
+              expand: true,
+              cwd: 'src/css',
+              src: ['*.css', '!*.min.css'],
+              dest: 'dist/css',
+              ext: '.min.css'
+            }]
+          }
+        },
         jshint: {
           beforeconcat: ['src/js/*.js'],
           afterconcat: ['dist/js/eweeye-treeview.js']
@@ -32,10 +47,11 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.registerTask('default', ['jshint:beforeconcat', 'concat:dist', 'jshint:afterconcat', 'uglify:dist']);
+    grunt.registerTask('default', ['jshint:beforeconcat', 'concat:dist', 'jshint:afterconcat', 'uglify:dist', 'cssmin']);
     grunt.registerTask('scrub', ['clean:dist']);
 
 }
