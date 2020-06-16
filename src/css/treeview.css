@@ -5,11 +5,6 @@ ul.eweeye-treeview {
 
 ul.eweeye-treeview div {
     display: inline-block;
-    min-width: 10px;
-    min-height: 10px;
-}
-
-ul.eweeye-treeview div:nth-child(1) {
     border: 1px;
     border-style: solid;
     border-color: darkblue;
@@ -17,27 +12,19 @@ ul.eweeye-treeview div:nth-child(1) {
     min-height: 10px;
 }
 
-ul.eweeye-treeview div:nth-child(2) {
-    border: 1px;
-    border-style: solid;
-    border-color: blue;
-    min-width: 10px;
-    min-height: 10px;
-}
-
-ul.eweeye-treeview div:nth-child(3) {
-    border: 1px;
-    border-style: solid;
-    border-color: cyan;
-    min-width: 10px;
-    min-height: 10px;
-}
-
-ul.eweeye-treeview ul:nth-child(4) {
+ul.eweeye-treeview ul {
+    list-style: none;
+    display: table;
     border: 1px;
     border-style: solid;
     border-color: purple;
     min-width: 10px;
-    min-height: 10px;
+    min-height: 10px;   
     padding-left: 10px;
+}
+
+ul.eweeye-treeview ul > div {
+    display: table;
+    min-width: 10px;
+    min-height: 10px;
 }

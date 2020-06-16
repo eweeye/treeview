@@ -8,24 +8,45 @@ eweeye.TreeView = (function() {
             Trees: {},
             Nodes: {},
             Types: {
-                "primitive" : function(item) {
-                    if (item === null) 
-                        return "null";
-                    if (typeof item === "undefined")
-                        return "undefined";
-                    if (typeof item === "boolean")
-                        if (item) 
-                            return "true";
-                        else
-                            return "false";
-                    if (typeof item === "number")
-                        return item.toString();
-                    if (typeof item === "string")
-                        return item;
-                    if (typeof item === "object")
-                        return JSON.stringify(item);
-                    if (typeof item === "function")
-                        return JSON.stringify(item);
+                "Primitive" : {
+                    "Content" : function(item) {
+                        if (item === null) 
+                            return "null";
+                        if (typeof item === "undefined")
+                            return "undefined";
+                        if (typeof item === "boolean")
+                            if (item) 
+                                return "true";
+                            else
+                                return "false";
+                        if (typeof item === "number")
+                            return item.toString();
+                        if (typeof item === "string")
+                            return item;
+                        if (typeof item === "object")
+                            return JSON.stringify(item);
+                        if (typeof item === "function")
+                            return JSON.stringify(item);
+                    },
+                    "Icon" : function(item) {
+                        if (item === null) 
+                            return "null";
+                        if (typeof item === "undefined")
+                            return "undefined";
+                        if (typeof item === "boolean")
+                            if (item) 
+                                return "true";
+                            else
+                                return "false";
+                        if (typeof item === "number")
+                            return item.toString();
+                        if (typeof item === "string")
+                            return item;
+                        if (typeof item === "object")
+                            return JSON.stringify(item);
+                        if (typeof item === "function")
+                            return JSON.stringify(item);
+                    }
                 }
             },
             Views: {
@@ -119,7 +140,7 @@ eweeye.TreeView = (function() {
                     console.error("Parent's children not found in DOM");
                     return;
                 }
-                var funcTypeRender = ui.Types.primitive;
+                var funcTypeRender = ui.Types.Primitive.Content;
                 if (node.Type) {
                     if (ui.Types.hasOwnProperty(node.Type)) {
                         funcTypeRender = ui.Types[node.Type].Renderer;
@@ -130,18 +151,23 @@ eweeye.TreeView = (function() {
                 }                
                 var nodeLI = document.createElement('li');
                 nodeLI.id = node.Id;
-                var iconDIV = document.createElement('div');
                 var contentDIV = document.createElement('div');
-                contentDIV.appendChild(document.createTextNode(funcTypeRender(node.Value)));
+                var contentButton = document.createElement('button');
+                contentDIV.appendChild(contentButton);
+                var iconSPAN = document.createElement('span');
+                var contentSPAN = document.createElement('span');
+                contentSPAN.appendChild(document.createTextNode(funcTypeRender(node.Value)));
+                contentButton.appendChild(iconSPAN);
+                contentButton.appendChild(contentSPAN);
                 var optionDIV = document.createElement('div');
-                nodeLI.appendChild(iconDIV);
                 nodeLI.appendChild(contentDIV);
                 nodeLI.appendChild(optionDIV);
                 var nodeUL = document.createElement('ul');
                 nodeLI.appendChild(nodeUL);
                 parentUL.appendChild(nodeLI);   
                 node.Rendered = true;
-                node.Visible = true;             
+                node.Visible = true;  
+                node.Expanded = true;           
             }
         };
         return ui;
