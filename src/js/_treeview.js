@@ -6,84 +6,142 @@ eweeye.TreeView = (function() {
         var _constChildren = "ch";
         var ui = {
             Trees: {},
+            Nodes: {},
             Types: {
-                "string" : function(item) { 
-                    return item.toString();
+                "primitive" : function(item) {
+                    if (item === null) 
+                        return "null";
+                    if (typeof item === "undefined")
+                        return "undefined";
+                    if (typeof item === "boolean")
+                        if (item) 
+                            return "true";
+                        else
+                            return "false";
+                    if (typeof item === "number")
+                        return item.toString();
+                    if (typeof item === "string")
+                        return item;
+                    if (typeof item === "object")
+                        return JSON.stringify(item);
+                    if (typeof item === "function")
+                        return JSON.stringify(item);
                 }
             },
             Views: {
 
             },
 
-            Add: function(treeId, type, id, path, value) {
+            Add: function(treeId, parentId, id, value, type) {
                 if (!ui.Trees.hasOwnProperty(treeId)) {
                     ui.Trees[treeId] = {
-                        Structure: {},
+                        Nodes: {},
                         Types: {}
                     };
                 }
-                var typeRenderFunc;
-                if (ui.Types.hasOwnProperty(type)) {
-                    typeRenderFunc = ui.Types[type].Renderer;
-                }
-                if (ui.Trees[treeId].Types.hasOwnProperty(type)) {
-                    typeRenderFunc = ui.Trees[treeId].Types[type].Renderer;
-                }
-                var render = true;
-                var parentId = null;
-                var position = ui.Trees[treeId].Structure;
-                if (path) {
-                    var pathArr = path.split('.');
-                    var pathPos;
-                    while (pathArr.length > 0) {
-                        pathPos = pathArr.shift();
-                        if (!position.hasOwnProperty(pathPos)) {
-                            console.error("Path does not exist");
-                            return;    
-                        }
-                        if (render && !position[pathPos].Expanded) {
-                            render = !render;
-                        }
-                        parentId = pathPos;
-                        position = position[pathPos].Children;
-                    }
-                }
-                if (position.hasOwnProperty(id)) {
-                    console.error("Id already exists");
+                if (ui.Trees[treeId].Nodes.hasOwnProperty(id)) {
+                    console.error("Id already exists in tree");
                     return;
                 }
+                if (ui.Nodes.hasOwnProperty(id)) {
+                    console.error("Id already exists in alternate tree");
+                    return;
+                }                
+                if (document.getElementById(id)) {
+                    console.error("Id already exists in DOM");
+                    return;
+                }
+                var render = true;
+                if (parentId) {
+                    var tempParentId = parentId;
+                    var count = 0;
+                    while (tempParentId) {
+                        console.log(count);
+                        if (!ui.Nodes.hasOwnProperty(tempParentId)) {
+                            render = false;
+                        } else {
+                            var parent = ui.Nodes[tempParentId];                             
+                            if (parent.Rendered === false || parent.Visible === false || parent.Expanded === false) {
+                                render = false;
+                                break;
+                            } else {
+                                tempParentId = parent.Parent;
+                            }
+                        }
+                    }
+                }
                 var node  = {
+                    Id: id,
                     Tree: treeId,
                     Parent: parentId,
                     Children: {},
                     Rendered: false,
                     Expanded: false,
+                    Visible: false,
                     Type: type,
                     Value: value
                 }; 
-                position[id] = node;
-                if (parent === null || render) {
+                ui.Nodes[id] = node;
+                ui.Trees[treeId].Nodes[id] = id;
+                if (parentId) {
+                    ui.Nodes[parentId].Children[id] = id;
+                }
+                if (render) {
                     ui.Render(node);
                 }
             },
 
             Render: function(node) {
                 var parentId = node.Tree;
-                if (node.parentId) {
-                    parentId = _constLibrary + _constTree + node.Tree + _constId + node.id + _constChildren;
+                if (node.Parent) {
+                    parentId = node.Parent;
                 }
-                var parentUL = document.getElementById(parentId);
-                if (!parentUL) {
-                    console.error("Parent not found");
+                var parentUL;
+                var selectedElement = document.getElementById(parentId);
+                if (!selectedElement) {
+                    console.error("Parent not found in DOM");
                     return;
                 }
+                if (selectedElement instanceof HTMLUListElement) {
+                    parentUL = selectedElement;
+                } else {
+                    if (selectedElement instanceof HTMLLIElement) {
+                        selectedElement = Array.prototype.filter.call(selectedElement.children,
+                            function (element) {
+                                return element instanceof HTMLUListElement;
+                            });
+                        if (selectedElement && selectedElement.length > 0) {
+                            parentUL = selectedElement[0];
+                        }
+                    }
+                }
+                if (!parentUL) {
+                    console.error("Parent's children not found in DOM");
+                    return;
+                }
+                var funcTypeRender = ui.Types.primitive;
+                if (node.Type) {
+                    if (ui.Types.hasOwnProperty(node.Type)) {
+                        funcTypeRender = ui.Types[node.Type].Renderer;
+                    }
+                    if (ui.Trees[treeId].Types.hasOwnProperty(node.Type)) {
+                        funcTypeRender = ui.Trees[treeId].Types[node.Type].Renderer;
+                    }
+                }                
                 var nodeLI = document.createElement('li');
-                nodeLI.id = _constLibrary + _constTree + node.Tree + _constId + node.id;
-                nodeLI.appendChild(document.createTextNode(node.Value));
+                nodeLI.id = node.Id;
+                var iconDIV = document.createElement('div');
+                var contentDIV = document.createElement('div');
+                contentDIV.appendChild(document.createTextNode(funcTypeRender(node.Value)));
+                var optionDIV = document.createElement('div');
+                nodeLI.appendChild(iconDIV);
+                nodeLI.appendChild(contentDIV);
+                nodeLI.appendChild(optionDIV);
                 var nodeUL = document.createElement('ul');
-                nodeUL.id =  nodeLI.id + _constChildren;
                 nodeLI.appendChild(nodeUL);
-                parentUL.appendChild(nodeLI);                
+                parentUL.appendChild(nodeLI);   
+                node.Rendered = true;
+                node.Visible = true;             
             }
         };
         return ui;
