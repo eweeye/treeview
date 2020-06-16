@@ -8,6 +8,14 @@
 </head>
 <body>
     <h1>EweEye TreeView</h1>
-    <ul class="eweeye-treeview"></ul>
+    <ul id="tree" class="eweeye-treeview"></ul>
+    <script>
+        eweeye.TreeView.Add("tree", null, "id1", "ID 1")
+        eweeye.TreeView.Add("tree", "id1", "id2", "ID 2")
+        eweeye.TreeView.Add("tree", "id1", "id3", "ID 3")
+        eweeye.TreeView.Add("tree", "id2", "id4", "ID 4")
+        eweeye.TreeView.Add("tree", "id4", "id5", "ID 5")
+        eweeye.TreeView.Add("tree", null, "id6", "ID 6")
+    </script>
 </body>
 </html>
