@@ -181,7 +181,7 @@ eweeye.TreeView = (function() {
                 }; 
                 if (nodeType.Options.IsExpandable) {
                     node.Children = {};
-                    node.Expanded = true;
+                    node.Expanded = false;
                 }
                 ui.Nodes[id] = node;
                 ui.Trees[treeId].Nodes[id] = id;
