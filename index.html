@@ -5,17 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TreeView</title>
     <script src="/dist/js/eweeye-treeview.js"></script>
+    <link rel="stylesheet" type="text/css" href="/dist/css/treeview.min.css" media="screen"/>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-IIED/eyOkM6ihtOiQsX2zizxFBphgnv1zbe1bKA+njdFzkr6cDNy16jfIKWu4FNH" crossorigin="anonymous">
 </head>
 <body>
     <h1>EweEye TreeView</h1>
     <ul id="tree" class="eweeye-treeview"></ul>
     <script>
-        eweeye.TreeView.Add("tree", null, "id1", "ID 1")
-        eweeye.TreeView.Add("tree", "id1", "id2", "ID 2")
-        eweeye.TreeView.Add("tree", "id1", "id3", "ID 3")
-        eweeye.TreeView.Add("tree", "id2", "id4", "ID 4")
-        eweeye.TreeView.Add("tree", "id4", "id5", "ID 5")
-        eweeye.TreeView.Add("tree", null, "id6", "ID 6")
+        eweeye.TreeView.Add("tree", null, "id1", "ID 1");
+        eweeye.TreeView.Add("tree", "id1", "id2", "ID 2");
+        eweeye.TreeView.Add("tree", "id1", "id3", "ID 3");
+        eweeye.TreeView.Add("tree", "id2", "id4", "ID 4");
+        eweeye.TreeView.Add("tree", "id4", "id5", "ID 5");
+        eweeye.TreeView.Add("tree", null, "id6", "ID 6");
+        eweeye.TreeView.Add("tree", null, "id7", 7);
+        eweeye.TreeView.Add("tree", null, "id8", true);
+        eweeye.TreeView.Add("tree", null, "id9", false);
+        eweeye.TreeView.Add("tree", null, "id10", "Directory", "Folder");
+        eweeye.TreeView.Add("tree", "id10", "id11", "Sub-Directory 1", "Folder");
+        eweeye.TreeView.Add("tree", "id10", "id12", "Sub-Directory 2", "Folder");
+        eweeye.TreeView.Add("tree", "id11", "id13", "Sub-Directory 3", "Folder");
+        eweeye.TreeView.Add("tree", "id11", "id14", "Sub-Directory 4", "Folder");
     </script>
 </body>
 </html>
