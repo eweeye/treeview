@@ -10,42 +10,65 @@ eweeye.TreeView = (function() {
             Types: {
                 "Primitive" : {
                     "Content" : function(item) {
+                        var span = document.createElement('span');
+                        var text = "";
                         if (item === null) 
-                            return "null";
-                        if (typeof item === "undefined")
-                            return "undefined";
-                        if (typeof item === "boolean")
-                            if (item) 
-                                return "true";
-                            else
-                                return "false";
-                        if (typeof item === "number")
-                            return item.toString();
-                        if (typeof item === "string")
-                            return item;
-                        if (typeof item === "object")
-                            return JSON.stringify(item);
-                        if (typeof item === "function")
-                            return JSON.stringify(item);
+                            text = "null";
+                        switch (typeof item) {
+                            case "undefined": 
+                                text = "undefined";
+                                break;
+                            case "boolean":
+                                if (item)
+                                    text = "true";
+                                else
+                                    text = "false";
+                                break;
+                            case "number":
+                                text = item.toString();
+                                break;
+                            case "string":
+                                text = item;
+                                break;
+                            case "object":
+                                text = JSON.stringify(item);
+                                break;
+                            case "function":
+                                text = JSON.stringify(item);
+                                break;
+                        } 
+                        span.appendChild(document.createTextNode(text));
+                        return span;
                     },
                     "Icon" : function(item) {
+                        var span = document.createElement('span');
+                        span.classList.add('fas');
                         if (item === null) 
-                            return "null";
-                        if (typeof item === "undefined")
-                            return "undefined";
-                        if (typeof item === "boolean")
-                            if (item) 
-                                return "true";
-                            else
-                                return "false";
-                        if (typeof item === "number")
-                            return item.toString();
-                        if (typeof item === "string")
-                            return item;
-                        if (typeof item === "object")
-                            return JSON.stringify(item);
-                        if (typeof item === "function")
-                            return JSON.stringify(item);
+                            span.classList.add('fa-ban');
+                        switch (typeof item) {
+                            case "undefined":
+                                span.classList.add('fa-ban');
+                                break;
+                            case "boolean":
+                                if (item) 
+                                    span.classList.add('fa-dot-circle');
+                                else
+                                    span.classList.add('fa-circle');
+                                break;
+                            case "number":
+                                span.classList.add('fa-hashtag');
+                                break;
+                            case "string":
+                                span.classList.add('fa-keyboard');
+                                break;
+                            case "object":
+                                span.classList.add('fa-cube');
+                                break;
+                            case "function":
+                                span.classList.add('fa-rocket');
+                                break;
+                        }
+                        return span;
                     }
                 }
             },
@@ -140,25 +163,28 @@ eweeye.TreeView = (function() {
                     console.error("Parent's children not found in DOM");
                     return;
                 }
-                var funcTypeRender = ui.Types.Primitive.Content;
+                var type = ui.Types.Primitive;
                 if (node.Type) {
                     if (ui.Types.hasOwnProperty(node.Type)) {
-                        funcTypeRender = ui.Types[node.Type].Renderer;
+                        type = ui.Types[node.Type];
                     }
                     if (ui.Trees[treeId].Types.hasOwnProperty(node.Type)) {
-                        funcTypeRender = ui.Trees[treeId].Types[node.Type].Renderer;
+                        type = ui.Trees[treeId].Types[node.Type];
                     }
-                }                
+                }
                 var nodeLI = document.createElement('li');
                 nodeLI.id = node.Id;
                 var contentDIV = document.createElement('div');
                 var contentButton = document.createElement('button');
                 contentDIV.appendChild(contentButton);
-                var iconSPAN = document.createElement('span');
-                var contentSPAN = document.createElement('span');
-                contentSPAN.appendChild(document.createTextNode(funcTypeRender(node.Value)));
-                contentButton.appendChild(iconSPAN);
-                contentButton.appendChild(contentSPAN);
+                var icon = type? type.Icon? type.Icon(node.Value) : null : null;
+                var content = type? type.Content? type.Content(node.Value) : null : null;
+                if (icon) {
+                    contentButton.appendChild(icon);
+                }
+                if (content) {
+                    contentButton.appendChild(content);
+                }
                 var optionDIV = document.createElement('div');
                 nodeLI.appendChild(contentDIV);
                 nodeLI.appendChild(optionDIV);
