@@ -5,11 +5,6 @@ ul.eweeye-treeview {
 
 ul.eweeye-treeview div {
     display: inline-block;
-    border: 1px;
-    border-style: solid;
-    border-color: darkblue;
-    min-width: 10px;
-    min-height: 10px;
 }
 
 ul.eweeye-treeview ul {
@@ -25,8 +20,6 @@ ul.eweeye-treeview ul {
 
 ul.eweeye-treeview ul > div {
     display: table;
-    min-width: 10px;
-    min-height: 10px;
 }
 
 ul.eweeye-treeview button > * {
@@ -42,4 +35,23 @@ ul.eweeye-treeview button > *:first-child {
 ul.eweeye-treeview button > *:last-child {
     margin-left: 5px;
     margin-right: 0;
+}
+
+ul.eweeye-treeview button.node {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: arial, sans-serif;
+    text-decoration: none;
+    cursor: none;
+}
+
+ul.eweeye-treeview button.node:hover {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: arial, sans-serif;
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
 }
