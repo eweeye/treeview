@@ -11,18 +11,18 @@ eweeye.TreeView = (function() {
                     "Options" : {
                         IsExpandable: true
                     },
-                    "Content" : function(item) {
+                    "Content" : function(node) {
                         var span = document.createElement('span');
                         var text = "";
-                        if (item === null) 
-                            text = "";
-                        switch (typeof item) {
-                            case "string":
-                                text = item;
-                                break;
-                            default:
-                                text = "";
-                                break;
+                        if (node && node.Value) {
+                            switch (typeof node.Value) {
+                                case "string":
+                                    text = node.Value;
+                                    break;
+                                default:
+                                    text = "";
+                                    break;
+                            }
                         } 
                         span.appendChild(document.createTextNode(text));
                         return span;
@@ -42,64 +42,68 @@ eweeye.TreeView = (function() {
                     "Options" : {
                         IsExpandable: false
                     },
-                    "Content" : function(item) {
+                    "Content" : function(node) {
                         var span = document.createElement('span');
                         var text = "";
-                        if (item === null) 
+                        if (!node && node.Value === null) 
                             text = "null";
-                        switch (typeof item) {
-                            case "undefined": 
-                                text = "undefined";
-                                break;
-                            case "boolean":
-                                if (item)
-                                    text = "true";
-                                else
-                                    text = "false";
-                                break;
-                            case "number":
-                                text = item.toString();
-                                break;
-                            case "string":
-                                text = item;
-                                break;
-                            case "object":
-                                text = JSON.stringify(item);
-                                break;
-                            case "function":
-                                text = JSON.stringify(item);
-                                break;
+                        if (node && (node.Value || node.Value === false || node.Value === 0)) {
+                            switch (typeof node.Value) {
+                                case "undefined": 
+                                    text = "undefined";
+                                    break;
+                                case "boolean":
+                                    if (node.Value)
+                                        text = "true";
+                                    else
+                                        text = "false";
+                                    break;
+                                case "number":
+                                    text = node.Value.toString();
+                                    break;
+                                case "string":
+                                    text = node.Value;
+                                    break;
+                                case "object":
+                                    text = JSON.stringify(node.Value);
+                                    break;
+                                case "function":
+                                    text = JSON.stringify(node.Value);
+                                    break;
+                            }
                         } 
                         span.appendChild(document.createTextNode(text));
                         return span;
                     },
-                    "Icon" : function(item) {
+                    "Icon" : function(node) {
                         var span = document.createElement('span');
                         span.classList.add('fas');
-                        if (item === null) 
+                        if (node && node.Value === null) 
                             span.classList.add('fa-ban');
-                        switch (typeof item) {
-                            case "undefined":
-                                span.classList.add('fa-ban');
-                                break;
-                            case "boolean":
-                                if (item) 
-                                    span.classList.add('fa-dot-circle');
-                                else
-                                    span.classList.add('fa-circle');
-                                break;
-                            case "number":
-                                span.classList.add('fa-hashtag');
-                                break;
-                            case "string":
-                                span.classList.add('fa-keyboard');
-                                break;
-                            case "object":
-                                span.classList.add('fa-cube');
-                                break;
-                            case "function":
-                                span.classList.add('fa-rocket');
-                                break;
+                        if (node && (node.Value || node.Value === false || node.Value === 0)) {
+                            switch (typeof node.Value) {
+                                case "undefined":
+                                    span.classList.add('fa-ban');
+                                    break;
+                                case "boolean":
+                                    if (node.Value) 
+                                        span.classList.add('fa-dot-circle');
+                                    else
+                                        span.classList.add('fa-circle');
+                                    break;
+                                case "number":
+                                    span.classList.add('fa-hashtag');
+                                    break;
+                                case "string":
+                                    span.classList.add('fa-keyboard');
+                                    break;
+                                case "object":
+                                    span.classList.add('fa-cube');
+                                    break;
+                                case "function":
+                                    span.classList.add('fa-rocket');
+                                    break;
+                            }
                         }
                         return span;
                     }
@@ -177,7 +181,7 @@ eweeye.TreeView = (function() {
                 }; 
                 if (nodeType.Options.IsExpandable) {
                     node.Children = {};
-                    node.Expanded = false;
+                    node.Expanded = true;
                 }
                 ui.Nodes[id] = node;
                 ui.Trees[treeId].Nodes[id] = id;
@@ -234,8 +238,8 @@ eweeye.TreeView = (function() {
                 var contentButton = document.createElement('button');
                 contentButton.classList.add(_constNode);
                 contentDIV.appendChild(contentButton);
-                var icon = type? type.Icon? type.Icon(node.Value) : null : null;
-                var content = type? type.Content? type.Content(node.Value) : null : null;
+                var icon = type? type.Icon? type.Icon(node) : null : null;
+                var content = type? type.Content? type.Content(node) : null : null;
                 if (icon) {
                     contentButton.appendChild(icon);
                 }
@@ -251,8 +255,7 @@ eweeye.TreeView = (function() {
                 }
                 parentUL.appendChild(nodeLI);   
                 node.Rendered = true;
-                node.Visible = true;  
-                node.Expanded = true;           
+                node.Visible = true;         
             }
         };
         return ui;
