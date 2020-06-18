@@ -45,6 +45,9 @@
         span.classList.add('fa-question');
         return span;
     };
+    this.eweeye.Node.Type.Base.prototype.Trigger = function() {
+        console.log("Node [" + this.Id + "] triggered");
+    };
 
     this.eweeye.Node.Type.Primitive = function Primitive() { };
     Inherit(this.eweeye.Node.Type.Primitive, this.eweeye.Node.Type.Base);
@@ -119,6 +122,10 @@
     Inherit(this.eweeye.Node.Type.Expandable, this.eweeye.Node.Type.Primitive);
     this.eweeye.Node.Type.Expandable.prototype.Children = {};
     this.eweeye.Node.Type.Expandable.prototype.Expanded = false;
+    this.eweeye.Node.Type.Expandable.prototype.Trigger = function() {
+        this.Expanded = !this.Expanded;
+        return this;
+    };
 
     this.eweeye.Node.Type.Folder = function Folder() { };
     Inherit(this.eweeye.Node.Type.Folder, this.eweeye.Node.Type.Expandable);

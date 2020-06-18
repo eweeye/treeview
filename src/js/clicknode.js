@@ -12,6 +12,10 @@ document.addEventListener('click', function(event) {
         if (button.matches('.node')) {
             var li = GetClosest(button, 'li');
             var nodeId = li.id;
+            var result = eweeye.TreeView.Nodes[nodeId].Trigger();
+            if (result) {
+                eweeye.TreeView.Render(result);
+            }
         }
     }
 });
