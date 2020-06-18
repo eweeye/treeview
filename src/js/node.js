@@ -118,6 +118,31 @@
         return span;
     };
 
+    this.eweeye.Node.Type.Toggle = function Toggle() { };
+    Inherit(this.eweeye.Node.Type.Toggle, this.eweeye.Node.Type.Base);
+    this.eweeye.Node.Type.Toggle.prototype.Value = false;
+    this.eweeye.Node.Type.Toggle.prototype.RenderContent = function() {
+        var span = document.createElement('span');
+        var text = "false";
+        if (this.Value) 
+            text = "true";
+        span.appendChild(document.createTextNode(text));
+        return span;
+    };
+    this.eweeye.Node.Type.Toggle.prototype.RenderIcon = function() {
+        var span = document.createElement('span');
+        span.classList.add('fas');
+        if (this.Value) 
+            span.classList.add('fa-dot-circle');
+        else
+            span.classList.add('fa-circle');
+        return span;
+    };
+    this.eweeye.Node.Type.Toggle.prototype.Trigger = function() {
+        this.Value = !this.Value;
+        return this;
+    };
+
     this.eweeye.Node.Type.Expandable = function Expandable() { };
     Inherit(this.eweeye.Node.Type.Expandable, this.eweeye.Node.Type.Primitive);
     this.eweeye.Node.Type.Expandable.prototype.Children = {};
@@ -149,6 +174,8 @@
                 return new eweeye.Node.Type.Expandable();
             case "folder":
                 return new eweeye.Node.Type.Folder();
+            case "toggle":
+                return new eweeye.Node.Type.Toggle();
             default:
                 return new eweeye.Node.Type.Primitive();
         }
