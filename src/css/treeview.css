@@ -7,37 +7,37 @@ ul.eweeye-treeview div {
     display: inline-block;
 }
 
-ul.eweeye-treeview ul {
+ul.eweeye-treeview ul.children {
     list-style: none;
     display: table;
     border: 1px;
-    border-style: solid;
-    border-color: purple;
-    min-width: 10px;
-    min-height: 10px;   
     padding-left: 10px;
 }
 
-ul.eweeye-treeview ul > div {
+ul.eweeye-treeview ul.children.hidden {
+    display: none;
+}
+
+ul.eweeye-treeview ul.children > div {
     display: table;
 }
 
-ul.eweeye-treeview button > * {
+ul.eweeye-treeview button.main {
     margin-left: 5px;
     margin-right: 5px;
 }
 
-ul.eweeye-treeview button > *:first-child {
+ul.eweeye-treeview button.main div.icon {
     margin-left: 0;
     margin-right: 5px;
 }
 
-ul.eweeye-treeview button > *:last-child {
+ul.eweeye-treeview button.main div.label {
     margin-left: 5px;
     margin-right: 0;
 }
 
-ul.eweeye-treeview button.node {
+ul.eweeye-treeview button.main {
     background: none;
     border: none;
     padding: 0;
@@ -46,7 +46,7 @@ ul.eweeye-treeview button.node {
     cursor: none;
 }
 
-ul.eweeye-treeview button.node:hover {
+ul.eweeye-treeview button.main:hover {
     background: none;
     border: none;
     padding: 0;

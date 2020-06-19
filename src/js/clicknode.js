@@ -9,12 +9,14 @@ document.addEventListener('click', function(event) {
     var button = GetClosest(event.target, 'button');
     if (button) {
         // check for main button of node
-        if (button.matches('.node')) {
+        if (button.matches('.' + window.eweeye.Constants.NodeButton)) {
             var li = GetClosest(button, 'li');
-            var nodeId = li.id;
-            var result = eweeye.TreeView.Nodes[nodeId].Trigger();
-            if (result) {
-                eweeye.TreeView.Render(result);
+            if (li.matches('.' + window.eweeye.Constants.NodeItem)) {
+                var nodeId = li.id;
+                var result = eweeye.TreeView.Nodes[nodeId].Trigger();
+                if (result) {
+                    eweeye.TreeView.Render(result);
+                }
             }
         }
     }
