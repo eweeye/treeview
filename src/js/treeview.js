@@ -65,6 +65,9 @@ eweeye.TreeView = (function() {
             if (node instanceof eweeye.Node.Type.Primitive) {
                 node.Value = value;
             }
+            if (node instanceof eweeye.Node.Type.Expandable) {
+                node.Children = {};
+            }
             ui.Nodes[id] = node;
             ui.Trees[treeId].Nodes[id] = id;
             if (parentId && ui.Nodes.hasOwnProperty(parentId)) {
@@ -79,8 +82,8 @@ eweeye.TreeView = (function() {
         },
 
         CreateNodeElement: function(node) {
-            var nodeLI = document.createElement('li');
-            nodeLI.id = node.Id;
+            var li = document.createElement('li');
+            li.id = node.Id;
             var contentDIV = document.createElement('div');
             var contentButton = document.createElement('button');
             contentButton.classList.add(_constNode);
@@ -94,13 +97,14 @@ eweeye.TreeView = (function() {
                 contentButton.appendChild(content);
             }
             var optionDIV = document.createElement('div');
-            nodeLI.appendChild(contentDIV);
-            nodeLI.appendChild(optionDIV);
-            node.Rendered = true;
+            li.appendChild(contentDIV);
+            li.appendChild(optionDIV);
             if (node instanceof eweeye.Node.Type.Expandable) {
-                this.CreateChildrenElement(nodeLI);
-            }    
-            return nodeLI;
+                this.CreateChildrenElement(li);
+            }
+            node.Rendered = true;
+            //li.classList.add('hidden');
+            return li;
         },
 
         UpdateNodeElement: function(li, node) {
@@ -116,6 +120,16 @@ eweeye.TreeView = (function() {
                     button.appendChild(content);
                 }
             }
+            if (node instanceof eweeye.Node.Type.Expandable) {
+                for (var prop in node.Children) {
+                    if (node.Children.hasOwnProperty(prop)) {
+                        var subnode = this.Nodes[prop];
+                        if (!subnode.Rendered) {
+                            this.Render(subnode);
+                        }
+                    }
+                }
+            }
         },
 
         CreateChildrenElement: function(li) {
@@ -123,9 +137,51 @@ eweeye.TreeView = (function() {
             li.appendChild(nodeUL);
         },
 
-        RenderPermitted: function(node) {
-            var permit = true;
-            
+        GetNodeContainerElement: function(node) {
+            return (function(node){
+                // Determine the UL that the node should be added under
+                // Default: Root of the tree
+                var id = node.Tree;
+                // Alternate: Parent within the tree
+                if (node.Parent) {
+                    id = node.Parent;
+                }
+                // Verify the containing UL exists in the DOM already
+                var found = document.getElementById(id);
+                if (!found) {
+                    console.error("Unable to add to DOM");
+                    return null;
+                }
+                // If the selected element is not a UL, the child UL needs to be found
+                if (!(found instanceof HTMLUListElement)) {
+                    // If the selected element is a LI, it is a list item that may have a UL for children
+                    if (found instanceof HTMLLIElement) {
+                        found = Array.prototype.filter.call(found.children,
+                            function (found) {
+                                return found instanceof HTMLUListElement;
+                            });
+                        if (found && found.length > 0) {
+                            found = found[0];
+                        }
+                    }
+                }
+                if (!found) {
+                    console.error("Unable to add to DOM");
+                    return;
+                }                
+                return found;
+            })(node);
+        },
+
+        GetNodeElement: function(node) {
+            return (function(node){
+                var found = document.getElementById(node.Id);
+                if (!found) {
+                    console.error("Unable to find in DOM");
+                    return;
+                }                
+                return found;
+            })(node);
         },
 
         // Function to render a node into the DOM
@@ -134,49 +190,18 @@ eweeye.TreeView = (function() {
                 console.error("Node not supported");
                 return;
             }
+            var li;
             if (!node.Rendered) {
-                // Determine the UL that the node should be added under
-                // Default: Root of the tree
-                var parentId = node.Tree;
-                // Alternate: Parent within the tree
-                if (node.Parent) {
-                    parentId = node.Parent;
-                }
-                // Verify the containing UL exists in the DOM already
-                var parentUL;
-                var selectedElement = document.getElementById(parentId);
-                if (!selectedElement) {
-                    console.error("Parent not found in DOM");
-                    return;
-                }
-                // If the selected element is a UL, it is where the node is to be added
-                if (selectedElement instanceof HTMLUListElement) {
-                    parentUL = selectedElement;
-                } else {
-                    // If the selected element is a LI, it is a list item that may have a UL for children
-                    if (selectedElement instanceof HTMLLIElement) {
-                        selectedElement = Array.prototype.filter.call(selectedElement.children,
-                            function (element) {
-                                return element instanceof HTMLUListElement;
-                            });
-                        if (selectedElement && selectedElement.length > 0) {
-                            parentUL = selectedElement[0];
-                        }
-                    }
-                }
-                if (!parentUL) {
-                    console.error("Parent's children not found in DOM");
-                    return;
-                }
-                var li = this.CreateNodeElement(node);
-                parentUL.appendChild(li);   
+                var ul = this.GetNodeContainerElement(node);
+                if (ul) {
+                    li = this.CreateNodeElement(node);
+                    ul.appendChild(li);
+                }   
             } else {
-                var li2 = document.getElementById(node.Id);
-                if (!li2) {
-                    console.error("Node not found in DOM");
-                    return;
+                li = this.GetNodeElement(node);
+                if (li) {
+                    this.UpdateNodeElement(li, node);
                 }
-                this.UpdateNodeElement(li2, node);
             }
         }
     };
