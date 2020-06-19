@@ -4,16 +4,9 @@
         this.eweeye = {};
     }
 
-    if (!this.eweeye.Constants) {
-        this.eweeye.Constants = {};
-    }
-
     if (!this.eweeye.Node) {
         this.eweeye.Node = {};
     }
-
-    // Add constants to ui namepace
-    this.eweeye.Constants.Node = "node";
 
     // Add base node type constructor functions
     this.eweeye.Node.Type = {};

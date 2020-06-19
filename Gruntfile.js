@@ -13,7 +13,12 @@ module.exports = function(grunt) {
                 separator: '\n',
             },
             dist: {
-                src: ['src/js/*.js'],
+                src: [
+                  'src/js/eweeye.js', 
+                  'src/js/constants.js',
+                  'src/js/node.js', 
+                  'src/js/treeview.js',
+                  'src/js/clicknode.js'],
                 dest: 'dist/js/eweeye-treeview.js'
             }
         },
@@ -41,6 +46,7 @@ module.exports = function(grunt) {
               files: {
                 'dist/js/eweeye-treeview.min.js': [
                   'src/js/eweeye.js', 
+                  'src/js/constants.js',
                   'src/js/node.js', 
                   'src/js/treeview.js',
                   'src/js/clicknode.js']
