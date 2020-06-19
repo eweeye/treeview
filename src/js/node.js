@@ -146,6 +146,7 @@
         this.Expanded = !this.Expanded;
         return this;
     };
+  
     this.eweeye.Node.Type.Expandable.prototype.RenderIcon = function() {
         var span = document.createElement('span');
         if (this.Expanded) {

@@ -45,7 +45,7 @@ module.exports = function(grunt) {
             dist: {
               files: {
                 'dist/js/eweeye-treeview.min.js': [
-                  'src/js/eweeye.js', 
+                  'src/js/eweeye.js',
                   'src/js/constants.js',
                   'src/js/node.js', 
                   'src/js/treeview.js',
