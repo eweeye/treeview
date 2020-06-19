@@ -39,7 +39,11 @@ module.exports = function(grunt) {
         uglify: {
             dist: {
               files: {
-                'dist/js/eweeye-treeview.min.js': ['src/js/*.js']
+                'dist/js/eweeye-treeview.min.js': [
+                  'src/js/eweeye.js', 
+                  'src/js/node.js', 
+                  'src/js/treeview.js',
+                  'src/js/clicknode.js']
               }
             }
           }
