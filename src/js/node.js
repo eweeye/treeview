@@ -140,23 +140,61 @@
     Inherit(this.eweeye.Node.Type.Expandable, this.eweeye.Node.Type.Primitive);
     this.eweeye.Node.Type.Expandable.prototype.Children = {};
     this.eweeye.Node.Type.Expandable.prototype.Expanded = false;
+    this.eweeye.Node.Type.Expandable.prototype.IconOpen = null;
+    this.eweeye.Node.Type.Expandable.prototype.IconClosed = null;
     this.eweeye.Node.Type.Expandable.prototype.Trigger = function() {
         this.Expanded = !this.Expanded;
         return this;
     };
-
-    this.eweeye.Node.Type.Folder = function Folder() { };
-    Inherit(this.eweeye.Node.Type.Folder, this.eweeye.Node.Type.Expandable);
-    this.eweeye.Node.Type.Folder.prototype.RenderIcon = function() {
+    this.eweeye.Node.Type.Expandable.prototype.RenderIcon = function() {
         var span = document.createElement('span');
-        span.classList.add('fas');
         if (this.Expanded) {
-            span.classList.add('fa-folder-open');
+            if (this.IconOpen && typeof this.IconOpen === 'string') {
+                span.classList.add('fas', 'fa-' + this.IconOpen);
+            }
         } else {
-            span.classList.add('fa-folder');
+            if (this.IconClosed && typeof this.IconClosed === 'string') {
+                span.classList.add('fas', 'fa-' + this.IconClosed);
+            }
         }
         return span;
+    };    
+
+    this.eweeye.Node.Type.Folder = function Folder() { 
+        this.IconOpen = 'folder-open';
+        this.IconClosed = 'folder';
     };
+    Inherit(this.eweeye.Node.Type.Folder, this.eweeye.Node.Type.Expandable);
+
+    this.eweeye.Node.Type.PlusMinus = function PlusMinus() {
+        this.IconOpen = 'minus-square';
+        this.IconClosed = 'plus-square';
+    };
+    Inherit(this.eweeye.Node.Type.PlusMinus, this.eweeye.Node.Type.Expandable);
+
+    this.eweeye.Node.Type.Chevron = function PlusMinus() {
+        this.IconOpen = 'chevron-down';
+        this.IconClosed = 'chevron-right';
+    };
+    Inherit(this.eweeye.Node.Type.Chevron, this.eweeye.Node.Type.Expandable);
+
+    this.eweeye.Node.Type.Caret = function PlusMinus() {
+        this.IconOpen = 'caret-down';
+        this.IconClosed = 'caret-right';
+    };
+    Inherit(this.eweeye.Node.Type.Caret, this.eweeye.Node.Type.Expandable);
+
+    this.eweeye.Node.Type.Arrow = function PlusMinus() {
+        this.IconOpen = 'arrow-down';
+        this.IconClosed = 'arrow-right';
+    };
+    Inherit(this.eweeye.Node.Type.Arrow, this.eweeye.Node.Type.Expandable);
+
+    this.eweeye.Node.Type.Angle = function PlusMinus() {
+        this.IconOpen = 'angle-down';
+        this.IconClosed = 'angle-right';
+    };
+    Inherit(this.eweeye.Node.Type.Angle, this.eweeye.Node.Type.Expandable);
 
     this.eweeye.Node.Create = function(name) {
         if (typeof name !== "string") 
@@ -169,6 +207,16 @@
                 return new eweeye.Node.Type.Folder();
             case "toggle":
                 return new eweeye.Node.Type.Toggle();
+            case "plusminus":
+                return new eweeye.Node.Type.PlusMinus();
+            case "chevron":
+                return new eweeye.Node.Type.Chevron();
+            case "caret":
+                return new eweeye.Node.Type.Caret();
+            case "arrow":
+                return new eweeye.Node.Type.Arrow();
+            case "angle":
+                return new eweeye.Node.Type.Angle();
             default:
                 return new eweeye.Node.Type.Primitive();
         }
