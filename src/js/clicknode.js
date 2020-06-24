@@ -13,7 +13,7 @@ document.addEventListener('click', function(event) {
             var li = GetClosest(button, 'li');
             if (li.matches('.' + window.eweeye.Constants.NodeItem)) {
                 var nodeId = li.id;
-                var result = eweeye.TreeView.Nodes[nodeId].Trigger();
+                var result = eweeye.TreeView.Nodes[nodeId].Trigger("click", "user");
                 if (result) {
                     eweeye.TreeView.Render(result);
                 }
