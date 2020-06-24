@@ -31,7 +31,7 @@
     _root.eweeye.Node.Type.Base.prototype.Parent = "";
     _root.eweeye.Node.Type.Base.prototype.Id = "";
     _root.eweeye.Node.Type.Base.prototype.Reactions = {};
-    _root.eweeye.Node.Type.Base.prototype.Rendered = false;            
+    _root.eweeye.Node.Type.Base.prototype.Rendered = false;
     _root.eweeye.Node.Type.Base.prototype.RenderContent = function() {
         var span = document.createElement('span');
         var text = "";
@@ -47,7 +47,11 @@
     _root.eweeye.Node.Type.Base.prototype.Trigger = function(action, node, message) {
         if (action === "click") {
             console.log("Node [" + this.Id + "] clicked.");
-            this.TriggerParent("poke", "Poked!");
+            this.TriggerParent("poke", "Message from son!");
+            this.TriggerSiblings("poke", "Message from bro!");
+            if (this.TriggerChildren) {
+                this.TriggerChildren("poke", "Message from dad!");
+            }
         } else if (action === "poke") {
             console.log("Node [" + this.Id + "] poked by node [" + node.Id + "] with message [" + JSON.stringify(message) + "]");
         }
@@ -63,7 +67,30 @@
         if (window.eweeye.TreeView.Nodes.hasOwnProperty(this.Parent)) {
             window.eweeye.TreeView.Nodes[this.Parent].Trigger(action, this, message);
         }
-    };    
+    };
+    _root.eweeye.Node.Type.Base.prototype.TriggerSiblings = function(action, message) {
+        // If the parent is falsey, the sibilings are the root nodes
+        if (!this.Parent) {
+            for (var prop1 in window.eweeye.TreeView.Nodes) {
+                if (window.eweeye.TreeView.Nodes.hasOwnProperty(prop1) && prop1 !== this.Id) {
+                    if (!window.eweeye.TreeView.Nodes[prop1].Parent) {
+                        window.eweeye.TreeView.Nodes[prop1].Trigger(action, this, message);
+                    }
+                }
+            }
+        } else {
+            if (window.eweeye.TreeView.Nodes.hasOwnProperty(this.Parent)) {
+                var node = window.eweeye.TreeView.Nodes[this.Parent];
+                if (node instanceof window.eweeye.Node.Type.Expandable) {
+                    for (var prop2 in node.Children) {
+                        if (window.eweeye.TreeView.Nodes.hasOwnProperty(prop2) && prop2 !== this.Id) {
+                            window.eweeye.TreeView.Nodes[prop2].Trigger(action, this, message);
+                        }
+                    }    
+                }
+            }
+        }
+    };     
 
     _root.eweeye.Node.Type.Primitive = function Primitive() { };
     Inherit(_root.eweeye.Node.Type.Primitive, _root.eweeye.Node.Type.Base);
@@ -172,8 +199,7 @@
             this.Expanded = !this.Expanded;
             window.eweeye.TreeView.Render(this);
         }
-    };
-  
+    };  
     _root.eweeye.Node.Type.Expandable.prototype.RenderIcon = function() {
         var span = document.createElement('span');
         if (this.Expanded) {
@@ -186,7 +212,14 @@
             }
         }
         return span;
-    };    
+    };
+    _root.eweeye.Node.Type.Expandable.prototype.TriggerChildren = function(action, message) {
+        for (var prop in this.Children) {
+            if (window.eweeye.TreeView.Nodes.hasOwnProperty(prop)) {
+                window.eweeye.TreeView.Nodes[prop].Trigger(action, this, message);
+            }
+        }    
+    };     
 
     _root.eweeye.Node.Type.Folder = function Folder() { 
         this.IconOpen = 'folder-open';
