@@ -2,6 +2,8 @@
 </h1>
 <p align="center">
 Simple yet flexible JavaScript Tree View Control
+
+    <a href="https://travis-ci.org/eweeye/treeview"><img src="https://img.shields.io/travis/eweeye/treeview.svg?style=flat-square&maxAge=600" alt="Builds"></a>
 </p>
 
 ## License
