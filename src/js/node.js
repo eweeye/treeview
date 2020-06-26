@@ -98,6 +98,7 @@
     _root.eweeye.Node.Type.Primitive.prototype.RenderContent = function() {
         var span = document.createElement('span');
         var text = "";
+        var element = null;
         if (this.Value === null) 
             text = "null";
         if (this.Value || this.Value === false || this.Value === 0) {
@@ -118,14 +119,23 @@
                     text = this.Value;
                     break;
                 case "object":
-                    text = JSON.stringify(this.Value);
+                    try {
+                    if (this.Value instanceof HTMLElement)
+                        element = this.Value;
+                    } catch (e) {
+                        text = JSON.stringify(this.Value);
+                    }
                     break;
                 case "function":
                     text = JSON.stringify(this.Value);
                     break;
             }
-        } 
-        span.appendChild(document.createTextNode(text));
+        }
+        if (!element) {
+            span.appendChild(document.createTextNode(text));
+        } else {
+            span.appendChild(element);
+        }
         return span;
     };
     _root.eweeye.Node.Type.Primitive.prototype.RenderIcon = function() {

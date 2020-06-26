@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TreeView</title>
+    <script src="/dist/js/eweeye-treeview.js"></script>
+    <link rel="stylesheet" type="text/css" href="/dist/css/treeview.min.css" media="screen"/>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-IIED/eyOkM6ihtOiQsX2zizxFBphgnv1zbe1bKA+njdFzkr6cDNy16jfIKWu4FNH" crossorigin="anonymous">
+</head>
+<body>
+    <h1>EweEye TreeView</h1>
+    <p>
+        This is an example of a tree structure that was in the existing HTML at the time of the document ready event.  The EweEye.TreeView scans the DOM looking for a UL tag with the class of "eweeye-treeview".  If found, it proceeds to replace the existing structure with the EweEye.TreeView control where LI elements, with child UL/OL delements, become expandable "PlusMinus" nodes and others become "Primitive" object nodes.
+    </p>
+    <h2>Raw HTML</h2>
+    <pre>&lt;ul class="eweeye-treeview"&gt;
+        &lt;li&gt;Level 1, Item 1
+            &lt;ul&gt;
+                &lt;li&gt;Level 2, Item 1
+                    &lt;ul&gt;
+                        &lt;li&gt;Level 3, Item 1&lt;/li&gt;
+                        &lt;li&gt;Level 3, Item 2&lt;/li&gt;
+                        &lt;li&gt;Level 3, Item 3&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/li&gt;
+                &lt;li&gt;Level 2, Item 2&lt;/li&gt;
+                &lt;li&gt;Level 2, Item 3&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/li&gt;
+        &lt;li&gt;Level 2, Item 2&lt;/li&gt;
+        &lt;li&gt;Level 2, Item 3&lt;/li&gt;
+    &lt;/ul&gt;</pre>
+    <h2>Pre-EweEye Render</h2>
+    <ul>
+        <li>Level 1, Item 1
+            <ul>
+                <li>Level 2, Item 1
+                    <ul>
+                        <li>Level 3, Item 1</li>
+                        <li>Level 3, Item 2</li>
+                        <li>Level 3, Item 3</li>
+                    </ul>
+                </li>
+                <li>Level 2, Item 2</li>
+                <li>Level 2, Item 3</li>
+            </ul>
+        </li>
+        <li>Level 2, Item 2</li>
+        <li>Level 2, Item 3</li>
+    </ul>
+    <h2>Post-EweEye Render</h2>
+    <ul class="eweeye-treeview">
+        <li>Level 1, Item 1
+            <ul>
+                <li>Level 2, Item 1
+                    <ul>
+                        <li>Level 3, Item 1</li>
+                        <li>Level 3, Item 2</li>
+                        <li>Level 3, Item 3</li>
+                    </ul>
+                </li>
+                <li>Level 2, Item 2</li>
+                <li>Level 2, Item 3</li>
+            </ul>
+        </li>
+        <li>Level 2, Item 2</li>
+        <li>Level 2, Item 3</li>
+    </ul>
+</body>
+</html>
