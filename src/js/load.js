@@ -17,13 +17,14 @@
                         items.push(tree.children[j]);
                     }
                 }
-                tree.innerHTML = "";
                 // Iterate through each LI and convert it to nodes
                 for (var k = 0, klen = items.length; k <  klen; k++) {
-                    processItem(tree.id, null, items[k]);
+                    if (!items[k].id || (items[k].id && !window.eweeye.TreeView.Nodes.Has(items[k].id))) {                    
+                        processItem(tree.id, null, items[k]);
+                        tree.removeChild(items[k]);
+                    }
                 }
             }
-            console.log(JSON.stringify(found));
             return;
         }               
     };
@@ -52,11 +53,10 @@
         while (item.childNodes.length > 0) {
             content.appendChild(item.childNodes[0]);
         }
-        item.innerHTML = "";
         if (lists.length > 0) {
-            window.eweeye.TreeView.Add(tree, parent, id, content, "PlusMinus");
+            window.eweeye.TreeView.Add(window.eweeye.Node.Create("PlusMinus", tree, parent, id, content));
         } else {
-            window.eweeye.TreeView.Add(tree, parent, id, content, "Element");
+            window.eweeye.TreeView.Add(window.eweeye.Node.Create("Element", tree, parent, id, content));
         }
         // Iterate through each UL/OL and convert it to nodes
         for (var k = 0, klen = lists.length; k <  klen; k++) {
@@ -64,7 +64,6 @@
         }
     };
     var processList = function(tree, parent, item) {
-        var id;
         var items = [];
         // Each item's child UL elements are child node containers, anything else is content
         for (var j = 0, jlen = item.children.length; j < jlen; j++) {
@@ -74,7 +73,10 @@
         }
         // Iterate through each LI and convert it to nodes
         for (var k = 0, klen = items.length; k <  klen; k++) {
-            processItem(tree, parent, items[k]);
+            if (!items[k].id || (items[k].id && !window.eweeye.TreeView.Nodes.Has(items[k].id))) {                    
+                processItem(tree, parent, items[k]);
+                item.removeChild(items[k]);
+            }
         }
     };    
     if (

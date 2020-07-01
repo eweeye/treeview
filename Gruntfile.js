@@ -19,7 +19,7 @@ module.exports = function(grunt) {
                   'src/js/node.js', 
                   'src/js/treeview.js',
                   'src/js/clicknode.js',
-                  'src/js/loadtree.js'],
+                  'src/js/load.js'],
                 dest: 'dist/js/eweeye-treeview.js'
             }
         },

@@ -12,29 +12,34 @@
     <h1>EweEye TreeView</h1>
     <ul id="tree" class="eweeye-treeview"></ul>
     <script>
-        eweeye.TreeView.Add("tree", null, "id1", "Text");
-        eweeye.TreeView.Add("tree", null, "id2", 1);
-        eweeye.TreeView.Add("tree", null, "id3", true);
-        eweeye.TreeView.Add("tree", null, "id4", false);
-        eweeye.TreeView.Add("tree", null, "id5", false, "Toggle");
-        eweeye.TreeView.Add("tree", null, "id6", "Folder", "Folder");
-        eweeye.TreeView.Add("tree", "id6", "id7", "Sub-folder", "Folder");
-        eweeye.TreeView.Add("tree", "id7", "id8", "Sub-sub-folder", "Folder");
-        eweeye.TreeView.Add("tree", null, "id9", "PlusMinus", "PlusMinus");
-        eweeye.TreeView.Add("tree", "id9", "id10", "Sub-PlusMinus", "PlusMinus");
-        eweeye.TreeView.Add("tree", "id10", "id11", "Sub-PlusMinus", "PlusMinus");
-        eweeye.TreeView.Add("tree", null, "id12", "Angle", "Angle");
-        eweeye.TreeView.Add("tree", "id12", "id13", "Sub-Angle", "Angle");
-        eweeye.TreeView.Add("tree", "id13", "id14", "Sub-Angle", "Angle");
-        eweeye.TreeView.Add("tree", null, "id15", "Arrow", "Arrow");
-        eweeye.TreeView.Add("tree", "id15", "id16", "Sub-Arrow", "Arrow");
-        eweeye.TreeView.Add("tree", "id16", "id17", "Sub-Arrow", "Arrow");
-        eweeye.TreeView.Add("tree", null, "id18", "Caret", "Caret");
-        eweeye.TreeView.Add("tree", "id18", "id19", "Sub-Caret", "Caret");
-        eweeye.TreeView.Add("tree", "id19", "id20", "Sub-Caret", "Caret");
-        eweeye.TreeView.Add("tree", null, "id21", "Chevron", "Chevron");
-        eweeye.TreeView.Add("tree", "id21", "id22", "Sub-Chevron", "Chevron");
-        eweeye.TreeView.Add("tree", "id22", "id23", "Sub-Chevron", "Chevron");
+        var nodes = [
+            eweeye.Node.Create("Primitive", "tree", null, "id1", "Text"),
+            eweeye.Node.Create("Primitive", "tree", null, "id2", 1),
+            eweeye.Node.Create("Primitive", "tree", null, "id3", true),
+            eweeye.Node.Create("Primitive", "tree", null, "id4", false),
+            eweeye.Node.Create("Toggle", "tree", null, "id5", false),
+            eweeye.Node.Create("Folder", "tree", null, "id6", "Folder"),
+            eweeye.Node.Create("Folder", "tree", "id6", "id7", "Sub-Folder"),
+            eweeye.Node.Create("Folder", "tree", "id7", "id8", "Sub-Folder"),
+            eweeye.Node.Create("PlusMinus", "tree", null, "id9", "PlusMinus"),
+            eweeye.Node.Create("PlusMinus", "tree", "id9", "id10", "Sub-PlusMinus"),
+            eweeye.Node.Create("PlusMinus", "tree", "id10", "id11", "Sub-PlusMinus"),
+            eweeye.Node.Create("Angle", "tree", null, "id12", "Angle"),
+            eweeye.Node.Create("Angle", "tree", "id12", "id13", "Sub-Angle"),
+            eweeye.Node.Create("Angle", "tree", "id13", "id14", "Sub-Angle"),
+            eweeye.Node.Create("Arrow", "tree", null, "id15", "Arrow"),
+            eweeye.Node.Create("Arrow", "tree", "id15", "id16", "Sub-Arrow"),
+            eweeye.Node.Create("Arrow", "tree", "id16", "id17", "Sub-Arrow"),
+            eweeye.Node.Create("Caret", "tree", null, "id18", "Caret"),
+            eweeye.Node.Create("Caret", "tree", "id18", "id19", "Sub-Caret"),
+            eweeye.Node.Create("Caret", "tree", "id19", "id20", "Sub-Caret"),
+            eweeye.Node.Create("Chevron", "tree", null, "id21", "Chevron"),
+            eweeye.Node.Create("Chevron", "tree", "id21", "id22", "Sub-Chevron"),
+            eweeye.Node.Create("Chevron", "tree", "id22", "id23", "Sub-Chevron")
+        ];
+        for (var i = 0, ilen = nodes.length; i < ilen; i++) {
+            eweeye.TreeView.Add(nodes[i]);
+        };
     </script>
 </body>
 </html>
