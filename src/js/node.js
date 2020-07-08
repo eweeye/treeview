@@ -6,11 +6,55 @@
         _root.eweeye = {};
     }
 
+    var Node = function Node() {};
+    Node.prototype.GetContainerElement = function(node) {
+        // Determine the UL that the node should be added under
+        // Default: Root of the tree
+        var id = node.Tree;
+        // Alternate: Parent within the tree
+        if (node.Parent) {
+            id = node.Parent;
+        }
+        // Verify the containing UL exists in the DOM already
+        var found = document.getElementById(id);
+        if (!found) {
+            console.error("Unable to add to DOM");
+            return null;
+        }
+        // If the selected element is not a UL, the child UL needs to be found
+        if (!(found instanceof HTMLUListElement)) {
+            // If the selected element is a LI, it is a list item that may have a UL for children
+            if (found instanceof HTMLLIElement) {
+                found = Array.prototype.filter.call(found.children,
+                    function (found) {
+                        return found instanceof HTMLUListElement;
+                    });
+                if (found && found.length > 0) {
+                    found = found[0];
+                }
+            }
+        }
+        if (!found) {
+            console.error("Unable to add to DOM");
+            return;
+        }                
+        return found;
+    };
+    Node.prototype.GetElement = function(node) {
+        return (function(node){
+            var found = document.getElementById(node.Id);
+            if (!found) {
+                console.error("Unable to find in DOM");
+                return;
+            }                
+            return found;
+        })(node);
+    };
+
     if (!_root.eweeye.Node) {
-        _root.eweeye.Node = {};
+        _root.eweeye.Node = new Node();
     }
 
-    var _treeview = _root.eweeye.TreeView;
     var _node = _root.eweeye.Node;
     var _constants = _root.eweeye.Constants;
 
@@ -37,6 +81,23 @@
     _node.Type.Base.prototype.Id = "";
     _node.Type.Base.prototype.Reactions = {};
     _node.Type.Base.prototype.Rendered = false;
+    // Function to render a node into the DOM
+    _node.Type.Base.prototype.Render = function() {
+        var _node = window.eweeye.Node;
+        var li;
+        if (!this.Rendered) {
+            var ul = _node.GetContainerElement(this);
+            if (ul) {
+                li = this.CreateElement();
+                ul.appendChild(li);
+            }   
+        } else {
+            li = _node.GetElement(this);
+            if (li) {
+                this.UpdateElement(li);
+            }
+        }
+    };
     _node.Type.Base.prototype.RenderContent = function() {
         var span = document.createElement('span');
         var text = "";
@@ -45,7 +106,24 @@
     };
     _node.Type.Base.prototype.RenderIcon = function() {
         var span = document.createElement('span');
-        span.classList.add('fas');
+        var theme = 'far';
+        if (this.hasOwnProperty("Theme")) {
+            switch (this.Theme.toLowerCase()) {
+                case "solid":
+                    theme = "fas";
+                    break;
+                case "light":
+                    theme = "fal";
+                    break;
+                case "duotone":
+                    theme = "fad";
+                    break;
+                case "solid":
+                default:
+                    break;
+            }
+        }
+        span.classList.add(theme);
         span.classList.add('fa-question');
         return span;
     };
@@ -194,7 +272,24 @@
     };
     _node.Type.Primitive.prototype.RenderIcon = function() {
         var span = document.createElement('span');
-        span.classList.add('fas');
+        var theme = 'far';
+        if (this.hasOwnProperty("Theme")) {
+            switch (this.Theme.toLowerCase()) {
+                case "solid":
+                    theme = "fas";
+                    break;
+                case "light":
+                    theme = "fal";
+                    break;
+                case "duotone":
+                    theme = "fad";
+                    break;
+                case "solid":
+                default:
+                    break;
+            }
+        }
+        span.classList.add(theme);
         if (this.Value === null) 
             span.classList.add('fa-ban');
         if (this.Value || this.Value === false || this.Value === 0) {
@@ -243,7 +338,24 @@
     };
     _node.Type.Toggle.prototype.RenderIcon = function() {
         var span = document.createElement('span');
-        span.classList.add('fas');
+        var theme = 'far';
+        if (this.hasOwnProperty("Theme")) {
+            switch (this.Theme.toLowerCase()) {
+                case "solid":
+                    theme = "fas";
+                    break;
+                case "light":
+                    theme = "fal";
+                    break;
+                case "duotone":
+                    theme = "fad";
+                    break;
+                case "solid":
+                default:
+                    break;
+            }
+        }
+        span.classList.add(theme);
         if (this.Value) 
             span.classList.add('fa-dot-circle');
         else
@@ -253,7 +365,7 @@
     _node.Type.Toggle.prototype.Reactions = {
         "click": function (actor) {
             this.Value = !this.Value;
-            window.eweeye.TreeView.Render(this);
+            this.Render();
         }
     };
 
@@ -272,18 +384,36 @@
     _node.Type.Expandable.prototype.Reactions = {
         "click": function (actor) {
             this.Expanded = !this.Expanded;
-            window.eweeye.TreeView.Render(this);
+            this.Render();
         }
     };  
     _node.Type.Expandable.prototype.RenderIcon = function() {
         var span = document.createElement('span');
+        var theme = 'far';
+        if (this.hasOwnProperty("Theme")) {
+            switch (this.Theme.toLowerCase()) {
+                case "solid":
+                    theme = "fas";
+                    break;
+                case "light":
+                    theme = "fal";
+                    break;
+                case "duotone":
+                    theme = "fad";
+                    break;
+                case "solid":
+                default:
+                    break;
+            }
+        }
+        span.classList.add(theme);        
         if (this.Expanded) {
             if (this.IconOpen && typeof this.IconOpen === 'string') {
-                span.classList.add('fas', 'fa-' + this.IconOpen);
+                span.classList.add('fa-' + this.IconOpen);
             }
         } else {
             if (this.IconClosed && typeof this.IconClosed === 'string') {
-                span.classList.add('fas', 'fa-' + this.IconClosed);
+                span.classList.add('fa-' + this.IconClosed);
             }
         }
         return span;
@@ -341,7 +471,7 @@
                     if (this.Children.hasOwnProperty(prop)) {
                         var subnode = _root.eweeye.TreeView.Nodes.Get(prop);
                         if (!subnode.Rendered) {
-                            _root.eweeye.TreeView.Render(subnode);
+                            subnode.Render();
                         }
                     }
                 }

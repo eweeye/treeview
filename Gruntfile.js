@@ -16,6 +16,7 @@ module.exports = function(grunt) {
                 src: [
                   'src/js/eweeye.js', 
                   'src/js/constants.js',
+                  'src/js/tree.js', 
                   'src/js/node.js', 
                   'src/js/treeview.js',
                   'src/js/clicknode.js',
