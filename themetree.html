@@ -12,7 +12,10 @@
     <h1>EweEye TreeView</h1>
     <ul id="tree" class="eweeye-treeview"></ul>
     <script>
-        eweeye.TreeView.Trees.Add("tree");
+        var themes = ["solid", "regular", "light", "duotone"];
+        var index = Math.floor((Math.random() * 4));
+        var tree = eweeye.Tree.Create("tree", themes[index]);
+        eweeye.TreeView.Trees.Add(tree);
         var nodes = [
             eweeye.Node.Create("Primitive", "tree", null, "id1", "Text"),
             eweeye.Node.Create("Primitive", "tree", null, "id2", 1),

@@ -1,6 +1,7 @@
 (function () {    
     var _id = 1;
     var processTrees = function() {
+        var _control = window.eweeye.TreeView;
         var found = document.getElementsByClassName("eweeye-treeview");
         if (found) {
             for (var i = 0, ilen = found.length; i < ilen; i++) {
@@ -10,6 +11,14 @@
                 if (!tree.id) {
                     tree.id = _id.toString();
                     _id++;
+                    while (_control.Trees.Has(tree.id)) {
+                        tree.id = _id.toString();
+                        _id++;
+                    }
+                }
+                // Add tree item if it doesn't exist
+                if (!_control.Trees.Has(tree.id)) {
+                    _control.Trees.Add(tree.id);
                 }
                 // Each tree's child LI elements are nodes, anything else is to be disposed
                 for (var j = 0, jlen = tree.children.length; j < jlen; j++) {
@@ -29,9 +38,9 @@
         }               
     };
     var processItem = function(tree, parent, item) {
+        var _control = window.eweeye.TreeView;
         var id;
         var lists = [];
-        var contents = [];
         var content = document.createElement("div");
         // Each node must have an id, assign one if one doesn't exist for item
         if (!item.id) {
@@ -54,9 +63,9 @@
             content.appendChild(item.childNodes[0]);
         }
         if (lists.length > 0) {
-            window.eweeye.TreeView.Add(window.eweeye.Node.Create("PlusMinus", tree, parent, id, content));
+            _control.Nodes.Add(window.eweeye.Node.Create("PlusMinus", tree, parent, id, content));
         } else {
-            window.eweeye.TreeView.Add(window.eweeye.Node.Create("Element", tree, parent, id, content));
+            _control.Nodes.Add(window.eweeye.Node.Create("Element", tree, parent, id, content));
         }
         // Iterate through each UL/OL and convert it to nodes
         for (var k = 0, klen = lists.length; k <  klen; k++) {
