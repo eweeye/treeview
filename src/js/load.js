@@ -39,15 +39,21 @@
     };
     var processItem = function(tree, parent, item) {
         var _control = window.eweeye.TreeView;
-        var id;
+        var _node = window.eweeye.Node;
+        var node = {
+            Id: (Math.floor((Math.random() * 9007199254740990) + 1)).toString(),
+            Tree: tree,
+            Parent: parent,
+            Value: document.createElement("div")
+        };
         var lists = [];
-        var content = document.createElement("div");
         // Each node must have an id, assign one if one doesn't exist for item
-        if (!item.id) {
-            id = _id.toString();
-            _id++;
-        } else {
-            id = item.id;
+        while (document.getElementById(node.Id)) {
+            node.Id =(Math.floor((Math.random() * 9007199254740990) + 1)).toString();
+        }
+        // Check for icon on LI
+        if (item.getAttribute('Icon')) {
+            node.Icon = item.getAttribute('Icon');
         }
         // Each item's child UL elements are child node containers, anything else is content
         for (var j = 0, jlen = item.children.length; j < jlen; j++) {
@@ -60,16 +66,20 @@
         }
         // Each item's child UL elements are child node containers, anything else is content
         while (item.childNodes.length > 0) {
-            content.appendChild(item.childNodes[0]);
+            node.Value.appendChild(item.childNodes[0]);
         }
         if (lists.length > 0) {
-            _control.Nodes.Add(window.eweeye.Node.Create("PlusMinus", tree, parent, id, content));
+            node.Type = "Expandable";
         } else {
-            _control.Nodes.Add(window.eweeye.Node.Create("Element", tree, parent, id, content));
+            node.Type = "Primitive";
+            if (!node.hasOwnProperty("Icon")) {
+                node.Icon = "circle";
+            }
         }
+        _control.Nodes.Add(_node.Create(node));
         // Iterate through each UL/OL and convert it to nodes
         for (var k = 0, klen = lists.length; k <  klen; k++) {
-            processList(tree, id, lists[k]);
+            processList(tree, node.Id, lists[k]);
         }
     };
     var processList = function(tree, parent, item) {
