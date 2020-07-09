@@ -219,14 +219,46 @@
         }
     };     
 
-    _node.Type.Primitive = function Primitive(tree, parent, id, value) { 
-        this.Tree = tree;
-        this.Parent = parent;
-        this.Id = id;
-        this.Value = value;
+    _node.Type.Primitive = function Primitive(node) { 
+        this.Tree = node.Tree;
+        this.Parent = node.Parent;
+        this.Id = node.Id;
+        this.Value = node.Value;
+        if (node.hasOwnProperty("Icon")) {
+            this.Icon = node.Icon;
+        } else {
+            if (this.Value === null) 
+            this.Icon = "ban";
+            if (this.Value || this.Value === false || this.Value === 0) {
+                switch (typeof this.Value) {
+                    case "undefined":
+                        this.Icon = "ban";
+                        break;
+                    case "boolean":
+                        if (this.Value) 
+                            this.Icon = "check";
+                        else
+                            this.Icon = "times";
+                        break;
+                    case "number":
+                        this.Icon = "hashtag";
+                        break;
+                    case "string":
+                        this.Icon = "text";
+                        break;
+                    case "object":
+                        this.Icon = "cube";
+                        break;
+                    case "function":
+                        this.Icon = "rocket";
+                        break;
+                }
+            }
+        }
     };
     Inherit(_node.Type.Primitive, _node.Type.Base);
     _node.Type.Primitive.prototype.Value = null;
+    _node.Type.Primitive.prototype.Icon = "circle";
     _node.Type.Primitive.prototype.RenderContent = function() {
         var span = document.createElement('span');
         var text = "";
@@ -291,43 +323,27 @@
         }
         span.classList.add(theme);
         if (this.Value === null) 
-            span.classList.add('fa-ban');
-        if (this.Value || this.Value === false || this.Value === 0) {
-            switch (typeof this.Value) {
-                case "undefined":
-                    span.classList.add('fa-ban');
-                    break;
-                case "boolean":
-                    if (this.Value) 
-                        span.classList.add('fa-dot-circle');
-                    else
-                        span.classList.add('fa-circle');
-                    break;
-                case "number":
-                    span.classList.add('fa-hashtag');
-                    break;
-                case "string":
-                    span.classList.add('fa-keyboard');
-                    break;
-                case "object":
-                    span.classList.add('fa-cube');
-                    break;
-                case "function":
-                    span.classList.add('fa-rocket');
-                    break;
-            }
-        }
+        span.classList.add('fa-ban');
+        span.classList.add('fa-' + this.Icon);
         return span;
     };
 
-    _node.Type.Toggle = function Toggle(tree, parent, id, value) { 
-        this.Tree = tree;
-        this.Parent = parent;
-        this.Id = id;
-        this.Value = value;
+    _node.Type.Toggle = function Toggle(node) { 
+        this.Tree = node.Tree;
+        this.Parent = node.Parent;
+        this.Id = node.Id;
+        this.Value = node.Value;
+        if (node.hasOwnProperty("IconTrue")) {
+            this.IconTrue = node.IconTrue;
+        }
+        if (node.hasOwnProperty("IconFalse")) {
+            this.IconFalse = node.IconFalse;
+        }
     };
     Inherit(_node.Type.Toggle, _node.Type.Base);
     _node.Type.Toggle.prototype.Value = false;
+    _node.Type.Toggle.prototype.IconTrue = "dot-circle";
+    _node.Type.Toggle.prototype.IconFalse = "circle";    
     _node.Type.Toggle.prototype.RenderContent = function() {
         var span = document.createElement('span');
         var text = "false";
@@ -357,9 +373,9 @@
         }
         span.classList.add(theme);
         if (this.Value) 
-            span.classList.add('fa-dot-circle');
+            span.classList.add('fa-' + this.IconTrue);
         else
-            span.classList.add('fa-circle');
+            span.classList.add('fa-' + this.IconFalse);
         return span;
     };
     _node.Type.Toggle.prototype.Reactions = {
@@ -369,18 +385,24 @@
         }
     };
 
-    _node.Type.Expandable = function Expandable(tree, parent, id, value) { 
-        this.Tree = tree;
-        this.Parent = parent;
-        this.Id = id;
-        this.Value = value;
+    _node.Type.Expandable = function Expandable(node) { 
+        this.Id = node.Id;
+        this.Tree = node.Tree;
+        this.Value = node.Value;
+        this.Parent = node.hasOwnProperty("Parent") ? node.Parent : null;
+        if (node.hasOwnProperty("IconOpen")) {
+            this.IconOpen = node.IconOpen;
+        }
+        if (node.hasOwnProperty("IconClosed")) {
+            this.IconClosed = node.IconClosed;
+        }
         this.Children = {};
     };
     Inherit(_node.Type.Expandable, _node.Type.Primitive);
     _node.Type.Expandable.prototype.Children = {};
     _node.Type.Expandable.prototype.Expanded = false;
-    _node.Type.Expandable.prototype.IconOpen = null;
-    _node.Type.Expandable.prototype.IconClosed = null;
+    _node.Type.Expandable.prototype.IconOpen = "minus-square";
+    _node.Type.Expandable.prototype.IconClosed = "plus-square";
     _node.Type.Expandable.prototype.Reactions = {
         "click": function (actor) {
             this.Expanded = !this.Expanded;
@@ -489,95 +511,16 @@
         }    
     };     
 
-    _node.Type.Folder = function Folder(tree, parent, id, value) { 
-        this.Tree = tree;
-        this.Parent = parent;
-        this.Id = id;
-        this.Value = value;
-        this.IconOpen = 'folder-open';
-        this.IconClosed = 'folder';
-        this.Children = {};
-    };
-    Inherit(_node.Type.Folder, _node.Type.Expandable);
-
-    _node.Type.PlusMinus = function PlusMinus(tree, parent, id, value) { 
-        this.Tree = tree;
-        this.Parent = parent;
-        this.Id = id;
-        this.Value = value;
-        this.IconOpen = 'minus-square';
-        this.IconClosed = 'plus-square';
-        this.Children = {};
-    };
-    Inherit(_node.Type.PlusMinus, _node.Type.Expandable);
-
-    _node.Type.Chevron = function PlusMinus(tree, parent, id, value) { 
-        this.Tree = tree;
-        this.Parent = parent;
-        this.Id = id;
-        this.Value = value;
-        this.IconOpen = 'chevron-down';
-        this.IconClosed = 'chevron-right';
-        this.Children = {};
-    };
-    Inherit(_node.Type.Chevron, _node.Type.Expandable);
-
-    _node.Type.Caret = function PlusMinus(tree, parent, id, value) { 
-        this.Tree = tree;
-        this.Parent = parent;
-        this.Id = id;
-        this.Value = value;
-        this.IconOpen = 'caret-down';
-        this.IconClosed = 'caret-right';
-        this.Children = {};
-    };
-    Inherit(_node.Type.Caret, _node.Type.Expandable);
-
-    _node.Type.Arrow = function PlusMinus(tree, parent, id, value) { 
-        this.Tree = tree;
-        this.Parent = parent;
-        this.Id = id;
-        this.Value = value;
-        this.IconOpen = 'arrow-down';
-        this.IconClosed = 'arrow-right';
-        this.Children = {};
-    };
-    Inherit(_node.Type.Arrow, _node.Type.Expandable);
-
-    _node.Type.Angle = function PlusMinus(tree, parent, id, value) { 
-        this.Tree = tree;
-        this.Parent = parent;
-        this.Id = id;
-        this.Value = value;
-        this.IconOpen = 'angle-down';
-        this.IconClosed = 'angle-right';
-        this.Children = {};
-    };
-    Inherit(_node.Type.Angle, _node.Type.Expandable);
-
-    _node.Create = function(type, tree, parent, id, value) { 
-        if (typeof type !== "string") 
-            type = "";
-        type = type.toLowerCase();
-        switch (type) {
-            case "expandable":
-                return new eweeye.Node.Type.Expandable(tree, parent, id, value);
-            case "folder":
-                return new eweeye.Node.Type.Folder(tree, parent, id, value);
-            case "toggle":
-                return new eweeye.Node.Type.Toggle(tree, parent, id, value);
-            case "plusminus":
-                return new eweeye.Node.Type.PlusMinus(tree, parent, id, value);
-            case "chevron":
-                return new eweeye.Node.Type.Chevron(tree, parent, id, value);
-            case "caret":
-                return new eweeye.Node.Type.Caret(tree, parent, id, value);
-            case "arrow":
-                return new eweeye.Node.Type.Arrow(tree, parent, id, value);
-            case "angle":
-                return new eweeye.Node.Type.Angle(tree, parent, id, value);
-            default:
-                return new eweeye.Node.Type.Primitive(tree, parent, id, value);
+    _node.Create = function(node) {
+        if (node.hasOwnProperty("Type")) {
+            switch (node.Type.toLowerCase()) {
+                case "expandable":
+                    return new eweeye.Node.Type.Expandable(node);
+                case "toggle":
+                    return new eweeye.Node.Type.Toggle(node);
+                default:
+                    return new eweeye.Node.Type.Primitive(node);
+            }
         }
     };
 })();
