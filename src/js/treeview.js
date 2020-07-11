@@ -54,35 +54,44 @@
                 console.error("Id already exists in DOM");
                 return;
             }
-            var render = true;
-            if (node.Parent) {
-                var tempParentId = node.Parent;
-                while (tempParentId) {
-                    if (!_control.Nodes.hasOwnProperty(tempParentId)) {
-                        console.error("Parent does not exist");
-                        return;
-                    } else {
-                        var parent = _control.Nodes[tempParentId];
-                        if (!(parent instanceof eweeye.Node.Type.Expandable)) {
-                            console.error("Parent does not support children");
-                            return;
-                        }
-                        if (parent.Rendered === false || parent.Visible === false || parent.Expanded === false) {
-                            render = false;
-                            break;
-                        } else {
-                            tempParentId = parent.Parent;
-                        }
-                    }
-                }
-            }
+            // Add node to treeview/tree
             _control.Nodes[node.Id] = node;
             _control.Trees[node.Tree].Add(node.Id);
-            if (node.Parent && _control.Nodes.hasOwnProperty(node.Parent)) {
-                var parentNode = _control.Nodes[node.Parent];
-                if (parentNode instanceof eweeye.Node.Type.Expandable) {
-                    parentNode.Children[node.Id] = node.Id;
+            // If node is expandable and orphans exist, then check orphans
+            if (_control.Orphans.length > 0 && node instanceof eweeye.Node.Type.Expandable) {
+                for (var o = 0, olen = _control.Orphans.length; o < olen; o++) {
+                    // If orphan has new node as it's parent, then reparent
+                    if (_control.Nodes[_control.Orphans[o]].Parent === node.Id) {
+                        var id = _control.Nodes[_control.Orphans[o]].Id;
+                        node.Children[id] = id;
+                        _control.Orphans.splice(o,1);
+                        olen--;
+                        o--;
+                    }
                 }
+            }                         
+            var render = true;
+            // Check if it has a parent
+            if (node.Parent) {
+                // If parent doesn't exist, then node is orphaned
+                if (!_control.Nodes.Has(node.Parent)) {
+                    _control.Orphans.push(node.Id);
+                    render = false;
+                    return;
+                }
+                // If parent does exist, then update parent's children
+                var parentNode = _control.Nodes[node.Parent];
+                if (!(parentNode instanceof eweeye.Node.Type.Expandable)) {
+                    render = false;
+                    return;
+                }
+                parentNode.Children[node.Id] = node.Id;
+                // Check if node needs to be rendered immediately
+                var tempParentId = node.Parent;
+                var parent = _control.Nodes[tempParentId];
+                if (parent.Rendered === false || parent.Expanded === false) {
+                    render = false;
+                }                
             }
             if (render) {
                 node.Render();
@@ -99,7 +108,7 @@
         _root.eweeye.TreeView.Type.Trees.prototype.Add = function(tree) {
             var _control = window.eweeye.TreeView;
             if (!tree) {
-                console.error("Empty node");
+                console.error("Empty tree");
                 return;
             }
             if (typeof tree === "string") {
@@ -116,10 +125,11 @@
                 _control.Trees[tree.Id] = tree;
             }
         };
-            
+
         _root.eweeye.TreeView = {
             Trees: new _root.eweeye.TreeView.Type.Trees(),
-            Nodes: new _root.eweeye.TreeView.Type.Nodes()
+            Nodes: new _root.eweeye.TreeView.Type.Nodes(),
+            Orphans: []
         };
     }
 
